@@ -51,7 +51,7 @@ window.addEventListener('load', function () {
       var rowIndex;
       for (rowIndex = 0; rowIndex < cols; rowIndex ++) {
         bmp = new createjs.Bitmap(img);
-        bmp.scaleX = bmp.scaleY = 0.1;
+        bmp.scaleX = bmp.scaleY = 0.3;
         bmp.y = cellHeight * (colIndex + rowIndex);
         bmp.x = cellWidth  * rowIndex;
         bmps.push(bmp);
