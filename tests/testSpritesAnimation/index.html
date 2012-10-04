@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<!-- Tutorial series by David Rousset: http://blogs.msdn.com/davrous -->
+<!-- Based on this EaselJS sample: http://easeljs.com/examples/bitmapAnimation.html -->
+<html>
+<head>
+<title>EaselJS Sprites Tutorial 03</title>
+
+<!-- Import EaselJS Framework -->
+<script src="http://code.createjs.com/easeljs-0.5.0.min.js"></script>
+<script src="script_new.js"></script>
+</head>	
+
+<body>
+	<div class="description">
+
+	</div>
+	<div class="canvasHolder">
+		<canvas id="testCanvas" width="800" height="320" style="background-color:#607559">
+            Your browser doesn't support canvas. Please download IE9+ on <a href="http://ie.microsoft.com/testdrive">IE Test Drive</a> 
+        </canvas>
+	</div>
+    <button id="Start" onclick=init();>Start</button><button id="Reset" onclick=reset();>Reset</button>
+    
+    <p>
+  Items per row: <input type="text" id="itemCount" value="10" size="10" />
+  Enable Shadow: <input type="checkbox" id="shadow" value="1" size="10" /> (shadow affects FPS)
+	</p>
+	<p>FPS: <span id="fps">0</span></p>
+	<p>
+</body>
+</html>
+
+
+
+<!-- <link rel="stylesheet" href="style.css" />
+<script src="script.js"></script>
+
+--!>
