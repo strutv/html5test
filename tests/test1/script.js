@@ -34,7 +34,7 @@ window.addEventListener('load', function () {
 
   var bmps, second = 0;
 
-  var preload = new createjs.PreloadJS;
+  var preload = new createjs.PreloadJS(false);
   preload.loadManifest(imgs);
   preload.onComplete = onImagesLoaded;
 
@@ -48,7 +48,7 @@ window.addEventListener('load', function () {
   function start() {
     bmps = [];
     imgs.forEach(function (img, colIndex) {
-      var rowIndex;
+      var rowIndex, bmp;
       for (rowIndex = 0; rowIndex < cols; rowIndex ++) {
         bmp = new createjs.Bitmap(img);
         bmp.scaleX = bmp.scaleY = 0.25;
