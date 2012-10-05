@@ -124,6 +124,7 @@
      
      // Black base color for background matches the native apps
      theWebView.backgroundColor = [UIColor blackColor];
+    theWebView.scalesPageToFit = YES;
 
 	return [super webViewDidFinishLoad:theWebView];
 }
