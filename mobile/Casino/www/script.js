@@ -1,5 +1,5 @@
 
-//document.addEventListener('deviceready', function () {
+// document.addEventListener('deviceready', function () {
 window.addEventListener('load', function () {
 
   var stage = new createjs.Stage('test-canvas');
@@ -32,12 +32,10 @@ window.addEventListener('load', function () {
     'icons/user_male.png',
     'icons/video.png'
   ];
-                          
-                          alert('Hello 1');
 
   var bmps, second = 0;
 
-  var preload = new createjs.PreloadJS;
+  var preload = new createjs.PreloadJS(false);
   preload.loadManifest(imgs);
   preload.onComplete = onImagesLoaded;
 
@@ -51,10 +49,10 @@ window.addEventListener('load', function () {
   function start() {
     bmps = [];
     imgs.forEach(function (img, colIndex) {
-      var rowIndex;
+      var rowIndex, bmp;
       for (rowIndex = 0; rowIndex < cols; rowIndex ++) {
         bmp = new createjs.Bitmap(img);
-        bmp.scaleX = bmp.scaleY = 0.1;
+        bmp.scaleX = bmp.scaleY = 0.25;
         bmp.y = cellHeight * (colIndex + rowIndex);
         bmp.x = cellWidth  * rowIndex;
         bmps.push(bmp);
