@@ -1,5 +1,4 @@
 
-// document.addEventListener('deviceready', function () {
 window.addEventListener('load', function () {
 
   var stage = new createjs.Stage('test-canvas');
