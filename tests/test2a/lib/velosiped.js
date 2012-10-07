@@ -28,6 +28,10 @@ Velosiped.Animation = function (spriteImg, options, position) {
   var height = spriteImg.height;
   var frameWidth  = width / options.sheetCols;
   var frameHeight = height / options.sheetRows;
+  var source = document.createElement('canvas');
+  source.width = width;
+  source.height = height;
+  source.getContext('2d').drawImage(spriteImg, 0, 0);
   var scale = 1; // no scaling
   var i;
   this.loopFromFrame = options.loopFromFrame;
@@ -39,7 +43,7 @@ Velosiped.Animation = function (spriteImg, options, position) {
   for (i = 0; i < options.sheetCols*options.sheetRows; i++) {
     var x = (i % options.sheetCols) * frameWidth;
     var y = (i / options.sheetCols >> 0) * frameHeight;
-    this.frames.push([spriteImg, x, y, frameWidth, frameHeight, position.x, position.y, frameWidth*scale, frameHeight*scale]);
+    this.frames.push([source, x, y, frameWidth, frameHeight, position.x, position.y, frameWidth*scale, frameHeight*scale]);
   }
 };
 Velosiped.Animation.prototype = {
