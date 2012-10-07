@@ -1,30 +1,23 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-<title>Animation Test 2</title>
 
-<!-- Import EaselJS Framework -->
-<script src="../lib/easeljs-0.5.0.min.js"></script>
+<style>
+  #test-canvas {
+    border: 2px solid silver;
+  }
+</style>
+
+<script>
+  Function.prototype.bind = Function.prototype.bind || function (context) {
+    var _this = this;
+    return function () {
+      _this.apply(context, arguments);
+    };
+  };
+</script>
+
+<script src="lib/velosiped.js"></script>
 <script src="script.js"></script>
-</head>	
 
-<body>
-  <p>&lt;- <a href="../index.html">All tests</a></p>
 
-	<div class="description">
+<p><button id="run-btn">Run</button> FPS: <span id="fps">0</span></p>
 
-	</div>
-	<div class="canvasHolder">
-		<canvas id="testCanvas" width="800" height="480" style="background-color:#707569">
-            Your browser doesn't support canvas. Please download IE9+ on <a href="http://ie.microsoft.com/testdrive">IE Test Drive</a> 
-        </canvas>
-	</div>
-    <button id="Start" onclick=init();>Start</button><button id="Reset" onclick=reset();>Reset</button>
-    
-    <p>
-  Enable Shadow: <input type="checkbox" id="shadow" value="1" size="10" /> (shadow affects FPS)
-	</p>
-	<p>FPS: <span id="fps">0</span></p>
-	<p>
-</body>
-</html>
+<canvas id="test-canvas" width="800" height="400"></canvas>

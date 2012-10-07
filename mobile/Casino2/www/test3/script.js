@@ -1,136 +1,68 @@
-    var canvas;
-    var stage;
-    var screen_width;
-    var screen_height;
-    var bmpAnimation = [];
-    var rowCount = 3;
-    var itemsPerRow = 5;
-    var shadowEnabled = false;
-    var w = 160;
-    var h = 158;
 
-    var numberOfImagesLoaded = 0;
 
-    var imgMonsterARun = [];// = new Image();
-    var imgMonsterAIdle = new Image();
+var Test3 = {
 
-    function init() {
-        //find canvas and load images, wait for last image to load
-        canvas = document.getElementById("testCanvas");
+  targetFPS: 90,
 
-        for(var i = 1; i < itemsPerRow*rowCount + 1; i++) { 
-			imgMonsterARun[i-1] = new Image();
-			imgMonsterARun[i-1].onload = handleImageLoad;
-			imgMonsterARun[i-1].onerror = handleImageError;
-			imgMonsterARun[i-1].src = "img/Sequence"+i+".png";
-        }
+  stageRows: 3,
+  stageCols: 5,
 
-        if (numberOfImagesLoaded == itemsPerRow*rowCount) {
-	        startGame();
-        }
-    }
+  run: function () {
+    this.loadImages().then(this.onImagesLoaded.bind(this));
+    this.fpsEl = document.getElementById('fps');
+    this.stage = new Velosiped.Stage(document.getElementById('test-canvas'));
+    Velosiped.Ticker.onTick(this.stage.update);
+    Velosiped.Ticker.onTick(this.showFPS.bind(this));
+  },
 
-    function handleImageLoad(e) {
-        numberOfImagesLoaded++;
-        // We're not starting the game until all images are loaded
-        // Otherwise, you may start to draw without the resource and raise
-        // this DOM Exception: INVALID_STATE_ERR (11) on the drawImage method
-        console.log("Loaded: "+ numberOfImagesLoaded);
-        if (numberOfImagesLoaded == itemsPerRow*rowCount) {
-//            numberOfImagesLoaded = 0;
-            startGame();
-        }
-    }
+  onImagesLoaded: function (imgs) {
+    this.buildStage(imgs);
+    Velosiped.Ticker.start(this.targetFPS);
+  },
 
-    function reset() {
-        stage.removeAllChildren();
-        createjs.Ticker.removeAllListeners();
-        stage.update();
-    }
+  loadImages: function () {
+    //var numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+    var numbers = [1,2,3,4,5,6,7,8,9,10,11,12];
+    var srcs = numbers.map(function (index) {
+      return 'img/Sequence'+index+'.png';
+    });
+    return Velosiped.utils.loadImages(srcs);
+  },
 
-function startGame() {
-	shadowEnabled = document.getElementById('shadow').checked;
-        // create a new stage and point it at our canvas:
-        stage = new createjs.Stage(canvas);
+  buildStage: function (imgs) {
+    var cellWidth  = this.stage.width / this.stageCols >> 0;
+    var cellHeight = this.stage.height / this.stageRows >> 0;
+    imgs.forEach(function (img, i) {
+      var options = {
+        sheetCols: 6,
+        sheetRows: 9,
+        loopFromFrame: 0,
+        loopToFrame: 51,
+        frameFrequency: 4
+      };
+      var position = {
+        x: cellWidth  * (i % this.stageCols),
+        y: cellHeight * (i / this.stageCols >> 0)
+      };
+      var animation = new Velosiped.Animation(img, options, position);
+      this.stage.add(animation);
+    }, this);
+  },
 
-        // grab canvas width and height for later calculations:
-        screen_width = canvas.width;
-        screen_height = canvas.height;
-//        rowCount = screen_height/64;
-	for(var i=0; i<rowCount; i++) {
-		for(var j=0; j<itemsPerRow;j++) {
-			var spriteSheet = new createjs.SpriteSheet({
-				//image to use
-				images: [imgMonsterARun[i*itemsPerRow + j]],
-				//width, height & registration point of each sprite
-				frames: { width: w, height: h, regX: w/2, regY: h/2 }, 
-				animations: {
-					walk: [0, 51, "walk", 4]
-				}
-			});
-	
-			// to save file size, the loaded sprite sheet only includes left facing animations
-			// we could flip the display objects with scaleX=-1, but this is expensive in most browsers
-			// instead, we generate a new sprite sheet which includes the flipped animations
-			createjs.SpriteSheetUtils.addFlippedFrames(spriteSheet, true, false, false);
-	
-			// create a BitmapSequence instance to display and play back the sprite sheet:
-			bmpAnimation[i*itemsPerRow + j] = new createjs.BitmapAnimation(spriteSheet);
-	
-			// set the registration point (the point it will be positioned and rotated around)
-			// to the center of the frame dimensions:
-			bmpAnimation[i*itemsPerRow + j].regX = bmpAnimation[i*itemsPerRow + j].spriteSheet.frameWidth / 2 | 0;
-			bmpAnimation[i*itemsPerRow + j].regY = bmpAnimation[i*itemsPerRow + j].spriteSheet.frameHeight / 2 | 0;
-	
-	
-			// set up a shadow. Note that shadows are ridiculously expensive. You could display hundreds
-			// of animated rats if you disabled the shadow.
-			if (shadowEnabled) {
-				bmpAnimation[i*itemsPerRow + j].shadow = new createjs.Shadow("#444", 0, 20, 20);
-			}
-	
-			bmpAnimation[i*itemsPerRow + j].name = "monster" + i*itemsPerRow + j;
-			bmpAnimation[i*itemsPerRow + j].direction = 90;
-			bmpAnimation[i*itemsPerRow + j].vX = 0;
-			bmpAnimation[i*itemsPerRow + j].vY = 0;
-			bmpAnimation[i*itemsPerRow + j].x = w/2 + w * (j);
-			bmpAnimation[i*itemsPerRow + j].y = h * (i+1) - h/2;
-			// have each monster start at a specific frame
+  nextTime: null,
 
-			// start playing the first sequence:
-			// walk_h has been generated by addFlippedFrames and
-			// contained the right facing animations
-			bmpAnimation[i*itemsPerRow + j].currentAnimationFrame = 0; 
-			bmpAnimation[i*itemsPerRow + j].gotoAndPlay("walk"); 
-
-			stage.addChild(bmpAnimation[i*itemsPerRow + j]);
-        }
-	}
-	// we want to do some work before we update the canvas,
-	// otherwise we could use Ticker.addListener(stage);
-	createjs.Ticker.addListener(window);
-	createjs.Ticker.useRAF = true;
-	// Best Framerate targeted (60 FPS)
-	createjs.Ticker.setFPS(100);
-}
-
-    //called if there is an error loading the image (usually due to a 404)
-    function handleImageError(e) {
-        console.log("Error Loading Image : " + e.target.src);
-    }
-
-function tick(elapsedTime, paused) {
-        // update the stage:
-    stage.update();
-    showFPS(elapsedTime);
-}
-
-var second = 0;
-  function showFPS(elapsedTime) {
-    second += elapsedTime;
-    if (second > 1000) {
-      document.getElementById('fps').innerHTML = Math.round(createjs.Ticker.getMeasuredFPS());
-      second = 0;
+  showFPS: function (t, dt, frame) {
+    if (t > this.nextTime) {
+      this.nextTime += 1000;
+      this.fpsEl.innerHTML = Velosiped.Ticker.getMeasuredFPS();
     }
   }
 
+};
+
+window.addEventListener('load', function () {
+  document.getElementById('run-btn').addEventListener('click', function (e) {
+    e.currentTarget.disabled = true;
+    Test3.run();
+  });
+});
