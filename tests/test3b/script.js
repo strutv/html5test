@@ -2,10 +2,12 @@
 
 var Test3 = {
 
+  numAnimations: 100,
+
   targetFPS: 90,
 
-  stageRows: 3,
-  stageCols: 5,
+  stageRows: 10,
+  stageCols: 10,
 
   run: function () {
     this.loadImages().then(this.onImagesLoaded.bind(this));
@@ -21,8 +23,10 @@ var Test3 = {
   },
 
   loadImages: function () {
-    var numbers = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
-    // var numbers = [1,2,3,4,5,6,7,8,9,10,11,12];
+    var i, numbers = [];
+    for (i = 1; i <= this.numAnimations; i++) {
+      numbers.push(i);
+    }
     var srcs = numbers.map(function (index) {
       return 'img/Sequence'+index+'.png';
     });
