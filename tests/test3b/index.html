@@ -1,0 +1,23 @@
+
+<style>
+  #test-canvas {
+    border: 2px solid silver;
+  }
+</style>
+
+<script>
+  Function.prototype.bind = Function.prototype.bind || function (context) {
+    var _this = this;
+    return function () {
+      _this.apply(context, arguments);
+    };
+  };
+</script>
+
+<script src="lib/velosiped.js"></script>
+<script src="script.js"></script>
+
+
+<p><button id="run-btn">Run</button> FPS: <span id="fps">0</span></p>
+
+<canvas id="test-canvas" width="800" height="400"></canvas>
