@@ -2,18 +2,40 @@
 <html>
 <head>
 
-  <!-- https://github.com/dannycroft/canvas-fireworks -->
+  <!-- based on https://github.com/dannycroft/canvas-fireworks -->
 
   <meta charset="utf-8">
   <title>Canvas Fireworks</title>
+ 
+  <script>
+    Function.prototype.bind = Function.prototype.bind || function (context) {
+      var _this = this;
+      return function () {
+        _this.apply(context, arguments);
+      };
+    };
+  </script>
+  <script src="../lib/velosiped.js"></script>
   <script src="js/canvas.js"></script>
+
+
+  <style>
+    #fireworks {
+      border: 2px solid silver;
+    }
+  </style>
 
 </head>
 
 <body>
 
   <h1>Canvas Fireworks</h1>
-  <canvas id="fireworks" width="600" height="400"></canvas>
+  <p>
+    Birth rate (particles/frame): <input id='birth-rate' type='text' size="3" value='10' />
+    <button id="run-btn">Run</button>
+    FPS: <span id="fps">0</span>
+  </p>
+  <canvas id="fireworks" width="800" height="500"></canvas>
 
 </body>
 </html>
