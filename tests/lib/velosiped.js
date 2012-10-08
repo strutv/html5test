@@ -84,6 +84,7 @@ Velosiped.Stage.prototype = {
 
 Velosiped.Ticker = {
   _listeners: [],
+  _times: [],
   frameNum: null,
   startTime: null,
   lastTime: null,
@@ -94,25 +95,29 @@ Velosiped.Ticker = {
     this.startTime = Date.now();
     this.lastTime = this.startTime;
     this.handleFrame = this.handleFrame.bind(this);
-    setTimeout(this.handleFrame, this.interval);
+    this.handleFrame();
   },
   handleFrame: function () {
+    setTimeout(this.handleFrame, this.interval);
     var now = Date.now();
     var t = now - this.startTime;
     var dt = this.lastTime ? now - this.lastTime : null;
     this.frameNum++;
-    this.lastDt = dt;
+    this._times.push(t);
+    this._times.length > 100 && this._times.shift();
     this._listeners.forEach(function (listener) {
       listener(t, dt, this.frameNum);
     }, this);
     this.lastTime = now;
-    setTimeout(this.handleFrame, this.interval);
   },
   onTick: function (handler) {
     this._listeners.push(handler);
   },
   getMeasuredFPS: function () {
-    return Math.round(1000 / this.lastDt);
+    var
+      frames = this._times.length,
+      time = this._times[frames-1] - this._times[0];
+    return ((1000 * frames / time) * 10 >> 0) / 10;
   }
 };
 
